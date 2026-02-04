@@ -6,8 +6,10 @@
 
 body {
     font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
-    overflow: hidden;
+    overflow: hidden;  /* ← SUPPRIME ou commente cette ligne */
+    overflow-y: auto;  /* ← AJOUTE ça : permet le scroll vertical */
     background: #000;
+    min-height: 100vh; /* assure que le body fait au moins la hauteur écran */
 }
 
 .screen {
@@ -281,11 +283,10 @@ body {
 /* ====== MAIN PAGE ====== */
 #mainPage {
     background-image: url('images/backgroundindex.jpg');
-    background-repeat: repeat;          /* se répète en boucle horizontalement et verticalement */
-    background-position: center center; /* centré si besoin */
-    background-size: auto;              /* taille naturelle, sans étirement */
-    /* Optionnel : un petit overlay sombre pour que le texte reste lisible */
-    background-color: rgba(0, 0, 0, 0.4); /* fond noir semi-transparent en fallback */
+    background-repeat: repeat;          /* répète en tuiles naturelles */
+    background-size: auto;              /* taille originale de l'image, pas d'étirement */
+    background-position: top left;      /* commence en haut à gauche */
+    min-height: 100vh;                  /* force la hauteur complète */
 }
 
 .retro-header {
@@ -323,6 +324,13 @@ body {
     font-weight: bold;
     text-shadow: 3px 3px 6px rgba(255, 105, 180, 0.3);
     letter-spacing: 5px;
+}
+
+.glowing-title,
+.main-title,
+h1, h2, h3, h4, h5, h6,
+p, button, input, .card h3 {
+    font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif !important;
 }
 
 @keyframes gradientText {
@@ -560,12 +568,14 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .glowing-title {
-        font-size: 2.5em;
+   .glowing-title {
+        font-size: 3em;              /* un peu plus grand sur mobile si tu veux */
     }
-    
     .main-title {
-        font-size: 3em;
+        font-size: 2.8em;
+    }
+    body {
+        font-size: 1.05em;           /* texte un peu plus gros sur mobile */
     }
     
     .content-grid {
