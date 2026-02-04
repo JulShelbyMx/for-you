@@ -18,6 +18,26 @@ html, body {
     font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif !important;
 }
 
+/* Custom scrollbar violette (PC + compatibilité Chrome/Edge/Brave) */
+::-webkit-scrollbar {
+    width: 12px;                  /* largeur de la barre */
+}
+
+::-webkit-scrollbar-track {
+    background: #1a0033;          /* fond sombre pour matcher le thème */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c71585;          /* violet principal */
+    border-radius: 10px;
+    border: 3px solid #1a0033;    /* bordure pour un effet propre */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff1493;          /* violet plus clair au hover */
+}
+
 /* Écrans password et animation restent full-screen et bloqués */
 .screen {
     position: fixed;
