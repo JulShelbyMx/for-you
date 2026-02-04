@@ -584,9 +584,34 @@ html, body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    body {
-        font-size: 1.1em;
-        -webkit-overflow-scrolling: touch;
+    html, body {
+        overflow-y: scroll !important;           /* force scroll */
+        -webkit-overflow-scrolling: touch !important; /* scroll fluide iOS */
+        touch-action: pan-y;                     /* permet scroll vertical tactile */
+        height: auto !important;                 /* permet au body de grandir */
+    }
+
+    .screen {
+        position: relative !important;           /* change fixed en relative sur mobile pour scroll */
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    #mainPage {
+        overflow-y: scroll !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .main-content {
+        padding-bottom: 100px !important;        /* espace en bas pour que le dernier élément soit accessible */
+    }
+
+    .click-prompt {
+        bottom: 150px !important;                /* remonte de 50px → 150px (ajuste si besoin) */
+        font-size: 1.8em !important;             /* un peu plus grand pour visibilité */
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
     }
     
     .glowing-title {
