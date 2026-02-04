@@ -303,12 +303,17 @@ function navigate(page) {
 
 // Données des memories (à remplir avec tes vraies images et dates)
 const memories = [
-    { src: "images/memories/mem1.jpg", date: "2026-02-03", time: "14:30" },
-    { src: "images/memories/mem2.jpg", date: "2026-02-01", time: "19:15" },
-    { src: "images/memories/mem3.jpg", date: "2026-01-28", time: "22:45" },
-    { src: "images/memories/mem4.jpg", date: "2026-01-25", time: "12:10" },
-    { src: "images/memories/mem5.jpg", date: "2026-01-20", time: "18:00" },
-    { src: "images/memories/mem6.jpg", date: "2025-12-24", time: "21:30" },
+    { src: "images/memories/test.jpg", date: "2026-02-03", time: "14:30" },
+    { src: "images/memories/test.jpg", date: "2026-02-01", time: "19:15" },
+    { src: "images/memories/test.jpg", date: "2026-01-28", time: "22:45" },
+    { src: "images/memories/test.jpg", date: "2026-01-25", time: "12:10" },
+    { src: "images/memories/test.jpg", date: "2026-01-20", time: "18:00" },
+    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:30" },
+    { src: "images/memories/test.jpg", date: "2025-12-22", time: "21:30" },
+    { src: "images/memories/test.jpg", date: "2025-12-21", time: "21:30" },
+    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:29" },
+    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:28" },
+    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:27" },
     // Ajoute-en autant que tu veux
 ];
 
