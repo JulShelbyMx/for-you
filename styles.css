@@ -612,12 +612,24 @@ html, body {
 
 #passwordScreen,
 #animationScreen {
-    overflow: hidden !important;        /* bloque scroll sur ces écrans */
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: fixed !important;
 }
 
+/* AUTORISE le scroll UNIQUEMENT sur la page principale (cartes) */
 #mainPage {
-    overflow-y: scroll !important;      /* scroll vertical autorisé ici */
-    -webkit-overflow-scrolling: touch !important; /* scroll fluide iOS */
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100vh;
+    position: relative !important;
+}
+
+.main-content {
+    min-height: auto;
+    padding-bottom: 120px !important; /* espace en bas pour bien voir les dernières cartes */
+    overflow-y: visible !important;
 }
 
 /* Responsive Design */
@@ -638,9 +650,13 @@ html, body {
     #mainPage {
         overflow-y: scroll !important;
         -webkit-overflow-scrolling: touch !important;
-        touch-action: pan-y !important; /* permet scroll tactile vertical */
-        height: auto !important;
-        min-height: 100vh;
+        touch-action: pan-y pinch-zoom !important; /* scroll vertical + zoom pincement */
+    }
+
+    #passwordScreen,
+    #animationScreen {
+        overflow: hidden !important;
+        touch-action: none !important; /* bloque tout tactile sur ces écrans */
     }
 
     .main-content {
