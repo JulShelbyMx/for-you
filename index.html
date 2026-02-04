@@ -1,29 +1,109 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>For You 💕</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: linear-gradient(to bottom, #ffe6f2, #fff0f5);
-      color: #333;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    h1 { color: #e91e63; font-size: 3.5rem; margin-bottom: 0; }
-    .subtitle { font-size: 1.6rem; color: #ff69b4; }
-    .heart { font-size: 4rem; animation: beat 1.4s infinite; }
-    @keyframes beat { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ♡</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>For You</h1>
-  <p class="subtitle">Juste pour nous deux 💗</p>
-  <div class="heart">❤️</div>
-  
-  <!-- Ajoute ici vos photos, messages, timeline, etc plus tard -->
+    <!-- Password Screen -->
+    <div id="passwordScreen" class="screen active">
+        <div class="password-container">
+            <div class="retro-border">
+                <h1 class="glowing-title">For You</h1>
+                <div class="hearts-decoration">
+                    <span>♡</span><span>♡</span><span>♡</span>
+                </div>
+                <div class="password-box">
+                    <input type="password" id="passwordInput" placeholder="Enter password..." autocomplete="off">
+                    <button id="submitBtn" onclick="checkPassword()">Enter</button>
+                </div>
+                <p id="errorMsg" class="error-msg"></p>
+            </div>
+        </div>
+        <div class="bg-spirals">
+            <div class="spiral spiral-1"></div>
+            <div class="spiral spiral-2"></div>
+            <div class="spiral spiral-3"></div>
+            <div class="spiral spiral-4"></div>
+        </div>
+    </div>
+
+    <!-- Heart Animation Screen -->
+    <div id="animationScreen" class="screen">
+        <canvas id="heartCanvas"></canvas>
+        <div id="clickPrompt" class="click-prompt">Click to continue ♡</div>
+    </div>
+
+    <!-- Main Page -->
+    <div id="mainPage" class="screen">
+        <div class="retro-header">
+            <div class="header-decoration">
+                <div class="star">✦</div>
+                <h1 class="main-title">For You</h1>
+                <div class="star">✦</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="retro-frame">
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">💌</span>
+                        </div>
+                        <h3>Love Letters</h3>
+                        <p>Messages from my heart to yours</p>
+                        <button class="retro-btn" onclick="navigate('letters')">Open</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">📸</span>
+                        </div>
+                        <h3>Our Memories</h3>
+                        <p>Special moments we've shared</p>
+                        <button class="retro-btn" onclick="navigate('memories')">View</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">🎵</span>
+                        </div>
+                        <h3>Our Playlist</h3>
+                        <p>Songs that remind me of you</p>
+                        <button class="retro-btn" onclick="navigate('playlist')">Listen</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">🌟</span>
+                        </div>
+                        <h3>Future Dreams</h3>
+                        <p>Plans for when we're together</p>
+                        <button class="retro-btn" onclick="navigate('dreams')">Explore</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative elements -->
+        <div class="floating-hearts">
+            <div class="float-heart">♡</div>
+            <div class="float-heart">♡</div>
+            <div class="float-heart">♡</div>
+            <div class="float-heart">♡</div>
+            <div class="float-heart">♡</div>
+        </div>
+
+        <div class="bg-pattern">
+            <div class="pattern-circle circle-1"></div>
+            <div class="pattern-circle circle-2"></div>
+            <div class="pattern-circle circle-3"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
