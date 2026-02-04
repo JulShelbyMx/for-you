@@ -422,22 +422,53 @@ html, body {
     position: relative;
     overflow: hidden;
     width: 100%;
+    user-select: none; /* évite la sélection texte pendant drag */
+    -webkit-user-select: none;
 }
 
 .carousel-track {
     display: flex;
-    transition: transform 0.5s ease;
     gap: 20px;
+    transition: transform 0.5s ease;
+    cursor: grab;
+}
+
+.carousel-track:active {
+    cursor: grabbing;
 }
 
 .carousel-item {
-    flex: 0 0 300px;
-    height: 400px;
+    flex: 0 0 320px; /* largeur fixe par item */
+    height: 420px;
     background-size: cover;
     background-position: center;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     border: 3px solid #ff69b4;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-item-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 1em;
+}
+
+.carousel-item-info .date-time {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.carousel-item-info .category {
+    font-style: italic;
+    opacity: 0.9;
 }
 
 .carousel-arrow {
@@ -452,33 +483,17 @@ html, body {
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.carousel-arrow:hover {
+    background: rgba(255, 20, 147, 0.9);
 }
 
 .carousel-arrow.left { left: 10px; }
 .carousel-arrow.right { right: 10px; }
 
-.calendar-view {
-    margin-top: 40px;
-}
 
-.calendar-list {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.date-group {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 15px;
-    border: 2px solid #ff69b4;
-}
-
-.date-title {
-    font-size: 1.8em;
-    color: #ff1493;
-    margin-bottom: 15px;
-}
 
 .memory-images {
     display: flex;
@@ -489,7 +504,7 @@ html, body {
 .memory-images img {
     width: 180px;
     height: 240px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 12px;
     border: 2px solid #ff69b4;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);

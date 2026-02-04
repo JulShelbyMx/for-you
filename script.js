@@ -316,25 +316,36 @@ const memories = [
     { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:27" },
     // Ajoute-en autant que tu veux
 ];
-
-// Tri par date décroissante (plus récent en premier)
-memories.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-// Affichage carousel (5 plus récents)
+// Carousel logic
 const carouselTrack = document.getElementById('carouselTrack');
-const carouselItems = memories.slice(0, 5); // 5 plus récents
+let currentIndex = 0;
+const itemWidth = 340; // largeur item + gap
 
-carouselItems.forEach(mem => {
-    const div = document.createElement('div');
-    div.className = 'carousel-item';
-    div.style.backgroundImage = `url(${mem.src})`;
-    carouselTrack.appendChild(div);
+// Affichage des items
+memories.forEach(mem => {
+    const item = document.createElement('div');
+    item.className = 'carousel-item';
+    item.style.backgroundImage = `url(${mem.src})`;
+
+    const info = document.createElement('div');
+    info.className = 'carousel-item-info';
+    
+    const dateTime = document.createElement('div');
+    dateTime.className = 'date-time';
+    dateTime.textContent = `${mem.date}, ${mem.time}`;
+    
+    const category = document.createElement('div');
+    category.className = 'category';
+    category.textContent = `(${mem.category})`;
+    
+    info.appendChild(dateTime);
+    info.appendChild(category);
+    item.appendChild(info);
+    
+    carouselTrack.appendChild(item);
 });
 
-// Navigation carousel
-let currentIndex = 0;
-const itemWidth = 320; // 300px + gap 20px
-
+// Flèches
 document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
@@ -343,53 +354,56 @@ document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
 });
 
 document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
-    if (currentIndex < memories.length - 5) {
+    if (currentIndex < memories.length - 1) {
         currentIndex++;
         carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
     }
 });
 
-// Afficher toutes les images en vue calendrier
-document.getElementById('showAllMemories').addEventListener('click', () => {
-    document.getElementById('carousel-container').style.display = 'none';
-    document.getElementById('calendarView').style.display = 'block';
+// Drag / Swipe (PC + mobile)
+let isDragging = false;
+let startX = 0;
+let scrollLeft = 0;
 
-    const calendarList = document.getElementById('calendarList');
-    calendarList.innerHTML = '';
-
-    // Grouper par date
-    const grouped = {};
-    memories.forEach(mem => {
-        if (!grouped[mem.date]) grouped[mem.date] = [];
-        grouped[mem.date].push(mem);
-    });
-
-    Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
-        const group = document.createElement('div');
-        group.className = 'date-group';
-
-        const title = document.createElement('div');
-        title.className = 'date-title';
-        title.textContent = date; // tu peux formater avec toLocaleDateString si tu veux
-
-        const imagesDiv = document.createElement('div');
-        imagesDiv.className = 'memory-images';
-
-        grouped[date].forEach(mem => {
-            const img = document.createElement('img');
-            img.src = mem.src;
-            img.alt = `Memory ${date} ${mem.time}`;
-            imagesDiv.appendChild(img);
-        });
-
-        group.appendChild(title);
-        group.appendChild(imagesDiv);
-        calendarList.appendChild(group);
-    });
+carouselTrack.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.pageX - carouselTrack.offsetLeft;
+    scrollLeft = carouselTrack.scrollLeft;
+    carouselTrack.style.cursor = 'grabbing';
 });
 
-// Retour au carousel
-document.getElementById('backToCarousel').addEventListener('click', () => {
-    document.getElementById('calendarView').style.display = 'none';
-    document.getElementById('carousel-container').style.display = 'block';
+carouselTrack.addEventListener('mouseleave', () => {
+    isDragging = false;
+    carouselTrack.style.cursor = 'grab';
+});
+
+carouselTrack.addEventListener('mouseup', () => {
+    isDragging = false;
+    carouselTrack.style.cursor = 'grab';
+});
+
+carouselTrack.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - carouselTrack.offsetLeft;
+    const walk = (x - startX) * 2; // vitesse du drag
+    carouselTrack.scrollLeft = scrollLeft - walk;
+});
+
+// Touch support (mobile swipe)
+carouselTrack.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].pageX - carouselTrack.offsetLeft;
+    scrollLeft = carouselTrack.scrollLeft;
+});
+
+carouselTrack.addEventListener('touchend', () => {
+    isDragging = false;
+});
+
+carouselTrack.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const x = e.touches[0].pageX - carouselTrack.offsetLeft;
+    const walk = (x - startX) * 2;
+    carouselTrack.scrollLeft = scrollLeft - walk;
 });
