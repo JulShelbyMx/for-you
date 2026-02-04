@@ -3,7 +3,7 @@
   
 # Build command to inject password into script
 # This reads the environment variable and adds it to the JavaScript file
-  command = "if [ -n \"$FOR_YOU_PASSWORD\" ]; then echo \"const FOR_YOU_PASSWORD = '$FOR_YOU_PASSWORD';\" | cat - script.js > script-temp.js && mv script-temp.js script.js; fi"
+  command = "if [ -n \"$FORYOUPASSWORD\" ]; then echo \"const FORYOUPASSWORD = '$FORYOUPASSWORD';\" | cat - script.js > script-temp.js && mv script-temp.js script.js; fi"
 
 # Security headers
 [[headers]]

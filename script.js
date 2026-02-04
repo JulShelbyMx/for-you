@@ -10,9 +10,8 @@ function checkPassword() {
     const errorMsg = document.getElementById('errorMsg');
     const password = input.value;
     
-    // In production, this will check against Netlify environment variable
-    // For local testing, you can set a default password
-    const correctPassword = typeof FOR_YOU_PASSWORD !== 'undefined' ? FOR_YOU_PASSWORD : 'iloveyou';
+    // Check against Netlify environment variable
+    const correctPassword = typeof FORYOUPASSWORD !== 'undefined' ? FORYOUPASSWORD : 'iloveyou';
     
     if (password === correctPassword) {
         errorMsg.textContent = '';
@@ -215,7 +214,6 @@ function initHeartAnimation() {
         if (animationPhase === 'forming' && frameCount > 120) {
             if (!heartFormed) {
                 heartFormed = true;
-                drawText();
                 showClickPrompt();
             }
         }
@@ -234,34 +232,6 @@ function initHeartAnimation() {
         }
         
         requestAnimationFrame(animate);
-    }
-    
-    // Draw "For You" text
-    function drawText() {
-        ctx.font = 'bold 80px Comic Sans MS';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        const gradient = ctx.createLinearGradient(
-            canvas.width / 2 - 200,
-            canvas.height / 2,
-            canvas.width / 2 + 200,
-            canvas.height / 2
-        );
-        gradient.addColorStop(0, '#ffffff');
-        gradient.addColorStop(0.5, '#ffc0cb');
-        gradient.addColorStop(1, '#ffffff');
-        
-        ctx.fillStyle = gradient;
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = '#ffffff';
-        ctx.fillText('For You', canvas.width / 2, canvas.height / 2);
-        ctx.shadowBlur = 0;
-        
-        // Outline
-        ctx.strokeStyle = '#ff1493';
-        ctx.lineWidth = 3;
-        ctx.strokeText('For You', canvas.width / 2, canvas.height / 2);
     }
     
     // Show click prompt
@@ -309,7 +279,6 @@ function navigate(page) {
 // Build command: echo "const FOR_YOU_PASSWORD = '${FOR_YOU_PASSWORD}';" > password-config.js && cat password-config.js script.js > script-compiled.js
 
 // For development, you can test with a default password
-// Just remove or comment this out in production
-if (typeof FOR_YOU_PASSWORD === 'undefined') {
-    console.log('Running in development mode. Use password: meow');
+if (typeof FORYOUPASSWORD === 'undefined') {
+    console.log('Running in development mode. Use password: iloveyou');
 }

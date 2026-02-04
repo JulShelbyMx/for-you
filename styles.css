@@ -28,7 +28,7 @@ body {
 
 /* ====== PASSWORD SCREEN ====== */
 #passwordScreen {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 25%, #3d2663 50%, #2d1b4e 75%, #1a0033 100%);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
     display: flex;
@@ -185,7 +185,7 @@ body {
 .spiral {
     position: absolute;
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(255, 105, 180, 0.4);
     animation: spiralRotate 20s linear infinite;
 }
 
@@ -197,7 +197,7 @@ body {
     width: 80%;
     height: 80%;
     border-radius: 50%;
-    border: 3px solid rgba(255, 192, 203, 0.2);
+    border: 3px solid rgba(138, 43, 226, 0.3);
     transform: translate(-50%, -50%);
 }
 
