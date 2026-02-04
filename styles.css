@@ -280,11 +280,12 @@ body {
 
 /* ====== MAIN PAGE ====== */
 #mainPage {
-    background: linear-gradient(135deg, #ffc0cb 0%, #ffb3d9 25%, #c1b3ff 50%, #b3d9ff 75%, #b3ffff 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 20s ease infinite;
-    overflow-y: auto;
-    padding: 20px;
+    background-image: url('images/backgroundindex.jpg');
+    background-repeat: repeat;          /* se répète en boucle horizontalement et verticalement */
+    background-position: center center; /* centré si besoin */
+    background-size: auto;              /* taille naturelle, sans étirement */
+    /* Optionnel : un petit overlay sombre pour que le texte reste lisible */
+    background-color: rgba(0, 0, 0, 0.4); /* fond noir semi-transparent en fallback */
 }
 
 .retro-header {
