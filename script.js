@@ -293,12 +293,98 @@ function initHeartAnimation() {
 
 // Navigation function
 function navigate(page) {
-    // Check if page exists, otherwise show coming soon message
-    const existingPages = ['letters'];
-    
-    if (existingPages.includes(page)) {
+    // page est maintenant le chemin complet ex: "pages/letters"
+    if (page.startsWith('pages/')) {
         window.location.href = page + '.html';
     } else {
-        alert(`${page.charAt(0).toUpperCase() + page.slice(1)} page - Coming soon! 💕\n\nYou can create this page following the letters.html template.`);
+        alert(page + " page - Coming soon! 💕");
     }
 }
+
+// Données des memories (à remplir avec tes vraies images et dates)
+const memories = [
+    { src: "images/memories/mem1.jpg", date: "2026-02-03", time: "14:30" },
+    { src: "images/memories/mem2.jpg", date: "2026-02-01", time: "19:15" },
+    { src: "images/memories/mem3.jpg", date: "2026-01-28", time: "22:45" },
+    { src: "images/memories/mem4.jpg", date: "2026-01-25", time: "12:10" },
+    { src: "images/memories/mem5.jpg", date: "2026-01-20", time: "18:00" },
+    { src: "images/memories/mem6.jpg", date: "2025-12-24", time: "21:30" },
+    // Ajoute-en autant que tu veux
+];
+
+// Tri par date décroissante (plus récent en premier)
+memories.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+// Affichage carousel (5 plus récents)
+const carouselTrack = document.getElementById('carouselTrack');
+const carouselItems = memories.slice(0, 5); // 5 plus récents
+
+carouselItems.forEach(mem => {
+    const div = document.createElement('div');
+    div.className = 'carousel-item';
+    div.style.backgroundImage = `url(${mem.src})`;
+    carouselTrack.appendChild(div);
+});
+
+// Navigation carousel
+let currentIndex = 0;
+const itemWidth = 320; // 300px + gap 20px
+
+document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    }
+});
+
+document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
+    if (currentIndex < memories.length - 5) {
+        currentIndex++;
+        carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    }
+});
+
+// Afficher toutes les images en vue calendrier
+document.getElementById('showAllMemories').addEventListener('click', () => {
+    document.getElementById('carousel-container').style.display = 'none';
+    document.getElementById('calendarView').style.display = 'block';
+
+    const calendarList = document.getElementById('calendarList');
+    calendarList.innerHTML = '';
+
+    // Grouper par date
+    const grouped = {};
+    memories.forEach(mem => {
+        if (!grouped[mem.date]) grouped[mem.date] = [];
+        grouped[mem.date].push(mem);
+    });
+
+    Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+        const group = document.createElement('div');
+        group.className = 'date-group';
+
+        const title = document.createElement('div');
+        title.className = 'date-title';
+        title.textContent = date; // tu peux formater avec toLocaleDateString si tu veux
+
+        const imagesDiv = document.createElement('div');
+        imagesDiv.className = 'memory-images';
+
+        grouped[date].forEach(mem => {
+            const img = document.createElement('img');
+            img.src = mem.src;
+            img.alt = `Memory ${date} ${mem.time}`;
+            imagesDiv.appendChild(img);
+        });
+
+        group.appendChild(title);
+        group.appendChild(imagesDiv);
+        calendarList.appendChild(group);
+    });
+});
+
+// Retour au carousel
+document.getElementById('backToCarousel').addEventListener('click', () => {
+    document.getElementById('calendarView').style.display = 'none';
+    document.getElementById('carousel-container').style.display = 'block';
+});
