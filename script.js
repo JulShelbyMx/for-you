@@ -4,25 +4,53 @@ let particles = [];
 let heartFormed = false;
 let dispersing = false;
 
-// Password validation
-function checkPassword() {
+// Password validation using Netlify function
+async function checkPassword() {
     const input = document.getElementById('passwordInput');
     const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
     const password = input.value;
     
-    // Check against Netlify environment variable
-    const correctPassword = typeof FORYOUPASSWORD !== 'undefined' ? FORYOUPASSWORD : 'iloveyou';
+    if (!password) {
+        errorMsg.textContent = '❌ Please enter a password!';
+        return;
+    }
     
-    if (password === correctPassword) {
-        errorMsg.textContent = '';
-        showAnimation();
-    } else {
-        errorMsg.textContent = '❌ Wrong password, try again!';
-        input.value = '';
-        input.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            input.style.animation = '';
-        }, 500);
+    // Disable button during check
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Checking...';
+    errorMsg.textContent = '';
+    
+    try {
+        // Call Netlify function to check password
+        const response = await fetch('/.netlify/functions/check-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            errorMsg.textContent = '';
+            showAnimation();
+        } else {
+            errorMsg.textContent = '❌ Wrong password, try again!';
+            input.value = '';
+            input.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                input.style.animation = '';
+            }, 500);
+        }
+    } catch (error) {
+        errorMsg.textContent = '❌ Error checking password. Please try again.';
+        console.error('Password check error:', error);
+    } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enter';
     }
 }
 
@@ -271,14 +299,4 @@ function navigate(page) {
     } else {
         alert(`${page.charAt(0).toUpperCase() + page.slice(1)} page - Coming soon! 💕\n\nYou can create this page following the letters.html template.`);
     }
-}
-
-// Netlify function to inject password
-// This script will be replaced by Netlify's build process
-// Add this to your Netlify build settings:
-// Build command: echo "const FOR_YOU_PASSWORD = '${FOR_YOU_PASSWORD}';" > password-config.js && cat password-config.js script.js > script-compiled.js
-
-// For development, you can test with a default password
-if (typeof FORYOUPASSWORD === 'undefined') {
-    console.log('Running in development mode. Use password: iloveyou');
 }
