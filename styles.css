@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-/* Force police Comic Sans MS partout */
+/* Police forcée partout (comme sur mobile) */
 * {
     font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif !important;
 }
@@ -14,23 +14,17 @@ html, body {
     padding: 0;
     height: 100%;
     min-height: 100vh;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;     /* force scroll vertical */
+    overflow-x: hidden;
     font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif !important;
-    background: #000;
 }
 
-/* Autorise scroll et visible partout */
-.screen, #mainPage, .main-content, .retro-frame, .content-grid, body * {
-    overflow: visible !important;
-    overflow-y: auto !important;
-}
-
-/* Screens : on passe en relative pour permettre scroll quand contenu long */
+/* Écrans password et animation restent full-screen et bloqués */
 .screen {
-    position: relative !important;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s ease, visibility 0.5s ease;
@@ -49,7 +43,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    overflow: hidden; /* garde bloqué ici */
 }
 
 @keyframes gradientShift {
@@ -107,14 +101,161 @@ html, body {
     letter-spacing: 3px;
 }
 
+.hearts-decoration {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.hearts-decoration span {
+    font-size: 2em;
+    color: #ff1493;
+    margin: 0 10px;
+    display: inline-block;
+    animation: heartBeat 1.5s ease infinite;
+}
+
+.hearts-decoration span:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.hearts-decoration span:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.password-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#passwordInput {
+    padding: 15px 20px;
+    border: 3px solid #ff69b4;
+    border-radius: 20px;
+    font-size: 1.1em;
+    text-align: center;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+#passwordInput:focus {
+    border-color: #ff1493;
+    box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
+    transform: scale(1.02);
+}
+
+#submitBtn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #ff1493, #ff69b4);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
+}
+
+#submitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 20, 147, 0.5);
+}
+
+#submitBtn:active {
+    transform: translateY(0);
+}
+
+.error-msg {
+    color: #ff1493;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+/* Background Spirals */
+.bg-spirals {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.spiral {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 105, 180, 0.4);
+    animation: spiralRotate 20s linear infinite;
+}
+
+.spiral::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 3px solid rgba(138, 43, 226, 0.3);
+    transform: translate(-50%, -50%);
+}
+
+.spiral-1 {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 10%;
+    animation-duration: 25s;
+}
+
+.spiral-2 {
+    width: 200px;
+    height: 200px;
+    top: 60%;
+    right: 15%;
+    animation-duration: 18s;
+    animation-direction: reverse;
+}
+
+.spiral-3 {
+    width: 250px;
+    height: 250px;
+    bottom: 10%;
+    left: 20%;
+    animation-duration: 22s;
+}
+
+.spiral-4 {
+    width: 180px;
+    height: 180px;
+    top: 20%;
+    right: 25%;
+    animation-duration: 20s;
+    animation-direction: reverse;
+}
+
+@keyframes spiralRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* ====== ANIMATION SCREEN ====== */
 #animationScreen {
     background: linear-gradient(135deg, #1a0033 0%, #330066 50%, #660099 100%);
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    overflow: hidden;
 }
 
 #heartCanvas {
@@ -154,23 +295,15 @@ html, body {
     background-size: auto;
     background-position: top left;
     min-height: 100vh;
-    overflow-y: auto !important;
+    overflow-y: auto !important;     /* ← SCROLL UNIQUEMENT ICI */
     position: relative;
 }
 
-/* Supprime TOUS les effets de lumière / shine / triangles qui suivent la souris */
+/* Supprime les effets lumière/shine qui suivent la souris (triangles blancs) */
 .card::before,
-.card:hover::before,
-.card::after,
-.retro-frame::before,
-.retro-frame::after,
-.main-content::before,
-.main-content::after,
-.retro-header::before,
-.retro-header::after {
+.card:hover::before {
     display: none !important;
     content: none !important;
-    background: none !important;
 }
 
 /* Header */
@@ -221,8 +354,7 @@ html, body {
     margin: 0 auto;
     position: relative;
     z-index: 10;
-    padding-bottom: 80px;
-    overflow-y: auto !important;
+    padding-bottom: 80px; /* espace en bas pour scroll */
 }
 
 .retro-frame {
@@ -234,6 +366,24 @@ html, body {
         0 0 30px rgba(255, 105, 180, 0.4),
         inset 0 0 20px rgba(255, 192, 203, 0.2);
     position: relative;
+}
+
+.retro-frame::before,
+.retro-frame::after {
+    content: '♡';
+    position: absolute;
+    font-size: 3em;
+    color: #ff1493;
+}
+
+.retro-frame::before {
+    top: -15px;
+    left: 30px;
+}
+
+.retro-frame::after {
+    bottom: -15px;
+    right: 30px;
 }
 
 .content-grid {
@@ -420,11 +570,11 @@ html, body {
     }
     
     .glowing-title {
-        font-size: 3.5em;
+        font-size: 3.2em;
     }
     
     .main-title {
-        font-size: 3em;
+        font-size: 2.8em;
     }
     
     .card {
