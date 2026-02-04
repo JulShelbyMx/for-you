@@ -6,7 +6,6 @@
 
 body {
     font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
-    overflow: hidden;  /* ← SUPPRIME ou commente cette ligne */
     overflow-y: auto;  /* ← AJOUTE ça : permet le scroll vertical */
     background: #000;
     min-height: 100vh; /* assure que le body fait au moins la hauteur écran */
