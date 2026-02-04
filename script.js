@@ -4,6 +4,8 @@ let particles = [];
 let heartFormed = false;
 let dispersing = false;
 
+console.log('SCRIPT.JS VERSION LIVE - Chargé le : ' + new Date().toISOString() + ' - Pas de mode dev ici !');
+
 // Password validation using Netlify function
 async function checkPassword() {
     const input = document.getElementById('passwordInput');
