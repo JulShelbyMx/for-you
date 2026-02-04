@@ -91,10 +91,10 @@ function showAnimation() {
 // Screen switching
 function switchScreen(from, to) {
     const fromScreen = document.getElementById(from + 'Screen');
-    let toScreen = document.getElementById(to + 'Screen');  // Changé const en let pour permettre la réassignation
-    
+    let toScreen = document.getElementById(to + 'Screen');  // ← changé const en let
+
     if (from === 'animation') {
-        toScreen = document.getElementById('mainPage');
+        toScreen = document.getElementById('mainPage');  // maintenant c'est possible
     }
     
     fromScreen.classList.remove('active');
