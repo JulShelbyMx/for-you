@@ -337,7 +337,16 @@ if (carouselTrack && memories.length > 0) {
     memories.forEach(mem => {
         const item = document.createElement('div');
         item.className = 'carousel-item';
-        item.style.backgroundImage = `url(${mem.src})`;
+        
+        // Image comme <img> au lieu de background (beaucoup plus fiable pour proportions)
+        const img = document.createElement('img');
+        img.src = mem.src;
+        img.alt = `Memory ${mem.date} ${mem.category}`;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain'; // garde proportions sans crop
+        img.style.objectPosition = 'center';
+        item.appendChild(img);
 
         const info = document.createElement('div');
         info.className = 'carousel-item-info';

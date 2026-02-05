@@ -448,11 +448,9 @@ html, body {
 }
 
 .carousel-item {
-    flex: 0 0 auto;                    /* plus de largeur fixe forcée */
-    max-width: 90vw;                   /* limite mobile pour éviter overflow */
-    height: auto;                      /* hauteur naturelle */
-    min-height: 300px;                 /* hauteur min pour éviter trop petit */
-    background-size: contain;          /* ← IMPORTANT : contain au lieu de cover */
+    flex: 0 0 320px;                    /* largeur fixe pour desktop, ajustable */
+    height: 420px;                      /* hauteur fixe pour cohérence */
+    background-size: contain;           /* garde proportions entières */
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 20px;
@@ -460,6 +458,10 @@ html, body {
     border: 3px solid #ff69b4;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3); /* fond sombre si image transparente */
 }
 
 .carousel-item-info {
@@ -764,6 +766,35 @@ html, body {
         height: auto !important;
         min-height: 100vh;
     }
+
+    .carousel-item {
+        flex: 0 0 85vw;                 /* presque pleine largeur sur mobile */
+        height: 55vh;                   /* hauteur relative à l'écran */
+        max-height: 500px;
+    }
+
+    .carousel-item-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    color: white;
+    padding: 12px 10px 8px;
+    text-align: center;
+    font-size: 0.95em;
+}
+
+.date-time {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.category {
+    font-style: italic;
+    opacity: 0.9;
+    font-size: 0.9em;
+}
 
     #mainPage {
         overflow-y: scroll !important;
