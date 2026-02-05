@@ -316,7 +316,7 @@ html, body {
 
 .click-prompt {
     position: absolute;
-    bottom: 80px;                     /* remonte un peu sur tous les écrans */
+    bottom: 30px;                     /* remonte un peu sur tous les écrans */
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.9);
