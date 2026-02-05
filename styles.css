@@ -315,27 +315,30 @@ html, body {
 }
 
 .click-prompt {
-    position: absolute;
-    bottom: 30px;                     /* remonte un peu sur tous les écrans */
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.2em;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
-    background: rgba(0, 0, 0, 0.5);
-    padding: 12px 28px;
-    border-radius: 15px;
-    border: 2px solid #ff69b4;
-    animation: pulse 2s ease infinite;
+    position: absolute !important;
+    bottom: 80px !important;                /* bien remonté sur mobile aussi */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    color: #ffffff !important;
+    font-size: 1.5em !important;            /* un peu plus gros, visible partout */
+    font-weight: bold !important;
+    text-shadow: 0 0 15px rgba(255, 20, 147, 0.9) !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    padding: 14px 32px !important;
+    border-radius: 30px !important;
+    border: 3px solid #ff69b4 !important;
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.6) !important;
+    animation: pulse 2s ease infinite !important;
     opacity: 0;
-    transition: opacity 0.5s ease;
-    z-index: 10;
-    white-space: nowrap;
+    transition: opacity 0.5s ease !important;
+    z-index: 999 !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    -webkit-text-size-adjust: 100% !important; /* force taille texte sur iOS */
 }
 
 .click-prompt.show {
-    opacity: 1;
+    opacity: 1 !important;
 }
 
 @keyframes pulse {
@@ -779,11 +782,9 @@ html, body {
     }
 
     .click-prompt {
-        bottom: 150px !important;                /* remonte de 50px → 150px (ajuste si besoin) */
-        font-size: 1.8em !important;             /* un peu plus grand pour visibilité */
-        padding: 10px 20px;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 15px;
+        bottom: 120px !important;          /* encore plus haut sur mobile */
+        font-size: 1.8em !important;
+        padding: 16px 40px !important;
     }
     
     .glowing-title {

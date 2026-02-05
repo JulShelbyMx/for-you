@@ -14,7 +14,7 @@ async function checkPassword() {
     const password = input.value;
     
     if (!password) {
-        errorMsg.textContent = '❌ Please enter a password!';
+        errorMsg.textContent = 'Please enter a password!';
         return;
     }
     
@@ -24,7 +24,6 @@ async function checkPassword() {
     errorMsg.textContent = '';
     
     try {
-        // Call Netlify function to check password
         const response = await fetch('/.netlify/functions/check-password', {
             method: 'POST',
             headers: {
@@ -39,7 +38,7 @@ async function checkPassword() {
             errorMsg.textContent = '';
             showAnimation();
         } else {
-            errorMsg.textContent = '❌ Wrong password, try again!';
+            errorMsg.textContent = 'Wrong password, try again!';
             input.value = '';
             input.style.animation = 'shake 0.5s';
             setTimeout(() => {
@@ -47,10 +46,9 @@ async function checkPassword() {
             }, 500);
         }
     } catch (error) {
-        errorMsg.textContent = '❌ Error checking password. Please try again.';
+        errorMsg.textContent = 'Error checking password. Please try again.';
         console.error('Password check error:', error);
     } finally {
-        // Re-enable button
         submitBtn.disabled = false;
         submitBtn.textContent = 'Enter';
     }
@@ -91,10 +89,10 @@ function showAnimation() {
 // Screen switching
 function switchScreen(from, to) {
     const fromScreen = document.getElementById(from + 'Screen');
-    let toScreen = document.getElementById(to + 'Screen');  // ← changé const en let
+    let toScreen = document.getElementById(to + 'Screen');
 
     if (from === 'animation') {
-        toScreen = document.getElementById('mainPage');  // maintenant c'est possible
+        toScreen = document.getElementById('mainPage');
     }
     
     fromScreen.classList.remove('active');
@@ -107,11 +105,9 @@ function initHeartAnimation() {
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Set canvas size
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Particle class
     class Particle {
         constructor(x, y, targetX, targetY) {
             this.x = x;
@@ -128,31 +124,20 @@ function initHeartAnimation() {
         }
         
         getColor() {
-            const colors = [
-                '#ff1493', // Deep pink
-                '#ff69b4', // Hot pink
-                '#ffc0cb', // Pink
-                '#ff91d7', // Light pink
-                '#ffffff'  // White
-            ];
+            const colors = ['#ff1493', '#ff69b4', '#ffc0cb', '#ff91d7', '#ffffff'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
         update(phase) {
             if (phase === 'forming') {
-                // Move towards target position
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
                 this.speedX = dx * 0.05;
                 this.speedY = dy * 0.05;
                 this.x += this.speedX;
                 this.y += this.speedY;
-                
-                if (this.opacity < 1) {
-                    this.opacity += 0.02;
-                }
+                if (this.opacity < 1) this.opacity += 0.02;
             } else if (phase === 'dispersing') {
-                // Disperse outward
                 const angle = Math.atan2(this.y - canvas.height / 2, this.x - canvas.width / 2);
                 this.speedX = Math.cos(angle) * 5;
                 this.speedY = Math.sin(angle) * 5;
@@ -169,38 +154,27 @@ function initHeartAnimation() {
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalAlpha = 1;
-            
-            // Add glow effect
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = this.color;
-            ctx.shadowBlur = 0;
         }
     }
     
-    // Create heart shape points
     function createHeartPoints() {
         const points = [];
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
         const scale = Math.min(canvas.width, canvas.height) / 4;
         
-        // Generate points along heart curve
         for (let t = 0; t < Math.PI * 2; t += 0.05) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-            
             points.push({
                 x: centerX + x * scale / 16,
                 y: centerY + y * scale / 16
             });
         }
         
-        // Fill the heart with more points
         const filledPoints = [];
         for (let i = 0; i < points.length; i++) {
             filledPoints.push(points[i]);
-            
-            // Add intermediate points
             for (let j = 0; j < 5; j++) {
                 const angle = Math.random() * Math.PI * 2;
                 const radius = Math.random() * scale * 0.6;
@@ -210,16 +184,13 @@ function initHeartAnimation() {
                 });
             }
         }
-        
         return filledPoints;
     }
     
-    // Initialize particles
     const heartPoints = createHeartPoints();
     particles = [];
     
     heartPoints.forEach(point => {
-        // Start particles from random positions
         const startX = Math.random() * canvas.width;
         const startY = Math.random() * canvas.height;
         particles.push(new Particle(startX, startY, point.x, point.y));
@@ -228,11 +199,8 @@ function initHeartAnimation() {
     let animationPhase = 'forming';
     let frameCount = 0;
     
-    // Animation loop
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Update and draw particles
         particles.forEach(particle => {
             particle.update(animationPhase);
             particle.draw();
@@ -240,7 +208,6 @@ function initHeartAnimation() {
         
         frameCount++;
         
-        // Check if heart is formed
         if (animationPhase === 'forming' && frameCount > 120) {
             if (!heartFormed) {
                 heartFormed = true;
@@ -248,12 +215,9 @@ function initHeartAnimation() {
             }
         }
         
-        // Remove particles that are too faded
         if (animationPhase === 'dispersing') {
             particles = particles.filter(p => p.opacity > 0);
-            
             if (particles.length === 0) {
-                // Animation complete, show main page
                 setTimeout(() => {
                     switchScreen('animation', 'main');
                 }, 500);
@@ -264,15 +228,11 @@ function initHeartAnimation() {
         requestAnimationFrame(animate);
     }
     
-    // Show click prompt
     function showClickPrompt() {
         const prompt = document.getElementById('clickPrompt');
-        setTimeout(() => {
-            prompt.classList.add('show');
-        }, 500);
+        setTimeout(() => prompt.classList.add('show'), 500);
     }
     
-    // Handle click to disperse
     canvas.addEventListener('click', () => {
         if (heartFormed && !dispersing) {
             dispersing = true;
@@ -281,19 +241,16 @@ function initHeartAnimation() {
         }
     });
     
-    // Handle window resize
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
     
-    // Start animation
     animate();
 }
 
 // Navigation function
 function navigate(page) {
-    // page est maintenant le chemin complet ex: "pages/letters"
     if (page.startsWith('pages/')) {
         window.location.href = page + '.html';
     } else {
@@ -301,44 +258,29 @@ function navigate(page) {
     }
 }
 
-// Données des memories (à remplir avec tes vraies images et dates)
+// Memories data (ajoute tes vraies images)
 const memories = [
-    { src: "images/memories/test.jpg", date: "2026-02-03", time: "14:30", category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2026-02-01", time: "19:15" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2026-01-28", time: "22:45" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2026-01-25", time: "12:10" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2026-01-20", time: "18:00" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:30" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-22", time: "21:30" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-21", time: "21:30" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:29" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:28" , category: "Roblox" },
-    { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:27" , category: "Roblox" },
-    // Ajoute-en autant que tu veux
+    { src: "images/memories/test.jpg", date: "03/02/2026", time: "13:44", category: "Roblox" },
+    { src: "images/memories/test.jpg", date: "01/02/2026", time: "19:15", category: "Our walk" },
+    { src: "images/memories/test.jpg", date: "28/01/2026", time: "22:45", category: "Cute moment" },
+    // Ajoute tes images ici
 ];
+
 // Carousel Memories amélioré
 const carouselTrack = document.getElementById('carouselTrack');
 let currentIndex = 0;
 let isDragging = false;
 let startX = 0;
 let scrollLeft = 0;
-const itemWidth = 340; // largeur approximative d'un item + gap
 
-// --- Drag / Swipe (PC souris + mobile doigt) ---
-carouselTrack.addEventListener('mousedown', startDragging);
-carouselTrack.addEventListener('touchstart', startDragging);
-
+// Drag/Swipe (PC + mobile)
 function startDragging(e) {
     isDragging = true;
-    startX = (e.type === 'touchstart' ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
+    startX = (e.type.includes('touch') ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
     scrollLeft = carouselTrack.scrollLeft;
     carouselTrack.style.cursor = 'grabbing';
     carouselTrack.style.userSelect = 'none';
 }
-
-carouselTrack.addEventListener('mouseleave', stopDragging);
-carouselTrack.addEventListener('mouseup', stopDragging);
-carouselTrack.addEventListener('touchend', stopDragging);
 
 function stopDragging() {
     isDragging = false;
@@ -346,48 +288,74 @@ function stopDragging() {
     carouselTrack.style.userSelect = 'auto';
 }
 
-carouselTrack.addEventListener('mousemove', drag);
-carouselTrack.addEventListener('touchmove', drag);
-
 function drag(e) {
     if (!isDragging) return;
     e.preventDefault();
-    const x = (e.type === 'touchmove' ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
-    const walk = (x - startX) * 1.5; // sensibilité du drag
+    const x = (e.type.includes('touch') ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
+    const walk = (x - startX) * 1.8; // sensibilité
     carouselTrack.scrollLeft = scrollLeft - walk;
 }
 
-// --- Flèches clavier (← →) ---
+carouselTrack.addEventListener('mousedown', startDragging);
+carouselTrack.addEventListener('touchstart', startDragging);
+carouselTrack.addEventListener('mouseleave', stopDragging);
+carouselTrack.addEventListener('mouseup', stopDragging);
+carouselTrack.addEventListener('touchend', stopDragging);
+carouselTrack.addEventListener('mousemove', drag);
+carouselTrack.addEventListener('touchmove', drag);
+
+// Flèches clavier ← →
 document.addEventListener('keydown', (e) => {
-    if (document.activeElement.tagName === 'INPUT') return; // ignore si on est dans le champ password
+    if (document.activeElement.tagName === 'INPUT') return;
     if (e.key === 'ArrowLeft' && currentIndex > 0) {
         currentIndex--;
-        scrollToIndex();
+        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
     }
     if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
         currentIndex++;
-        scrollToIndex();
+        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
     }
 });
 
-function scrollToIndex() {
-    carouselTrack.scrollTo({
-        left: currentIndex * itemWidth,
-        behavior: 'smooth'
-    });
-}
-
-// --- Flèches visuelles (gauche / droite) ---
+// Flèches visuelles
 document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
-        scrollToIndex();
+        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
     }
 });
 
 document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
     if (currentIndex < memories.length - 1) {
         currentIndex++;
-        scrollToIndex();
+        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
     }
 });
+
+// Populate carousel
+if (carouselTrack && memories.length > 0) {
+    memories.forEach(mem => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.style.backgroundImage = `url(${mem.src})`;
+
+        const info = document.createElement('div');
+        info.className = 'carousel-item-info';
+        
+        const dateTime = document.createElement('div');
+        dateTime.className = 'date-time';
+        dateTime.textContent = `${mem.date}, ${mem.time}`;
+        
+        const category = document.createElement('div');
+        category.className = 'category';
+        category.textContent = `(${mem.category})`;
+        
+        info.appendChild(dateTime);
+        info.appendChild(category);
+        item.appendChild(info);
+        
+        carouselTrack.appendChild(item);
+    });
+} else {
+    console.error("Carousel track not found or no memories data");
+}
