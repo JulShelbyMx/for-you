@@ -316,94 +316,78 @@ const memories = [
     { src: "images/memories/test.jpg", date: "2025-12-24", time: "21:27" , category: "Roblox" },
     // Ajoute-en autant que tu veux
 ];
-// Carousel logic
+// Carousel Memories amélioré
 const carouselTrack = document.getElementById('carouselTrack');
 let currentIndex = 0;
-const itemWidth = 340; // largeur item + gap
+let isDragging = false;
+let startX = 0;
+let scrollLeft = 0;
+const itemWidth = 340; // largeur approximative d'un item + gap
 
-// Affichage des items
-memories.forEach(mem => {
-    const item = document.createElement('div');
-    item.className = 'carousel-item';
-    item.style.backgroundImage = `url(${mem.src})`;
+// --- Drag / Swipe (PC souris + mobile doigt) ---
+carouselTrack.addEventListener('mousedown', startDragging);
+carouselTrack.addEventListener('touchstart', startDragging);
 
-    const info = document.createElement('div');
-    info.className = 'carousel-item-info';
-    
-    const dateTime = document.createElement('div');
-    dateTime.className = 'date-time';
-    dateTime.textContent = `${mem.date}, ${mem.time}`;
-    
-    const category = document.createElement('div');
-    category.className = 'category';
-    category.textContent = `(${mem.category})`;
-    
-    info.appendChild(dateTime);
-    info.appendChild(category);
-    item.appendChild(info);
-    
-    carouselTrack.appendChild(item);
+function startDragging(e) {
+    isDragging = true;
+    startX = (e.type === 'touchstart' ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
+    scrollLeft = carouselTrack.scrollLeft;
+    carouselTrack.style.cursor = 'grabbing';
+    carouselTrack.style.userSelect = 'none';
+}
+
+carouselTrack.addEventListener('mouseleave', stopDragging);
+carouselTrack.addEventListener('mouseup', stopDragging);
+carouselTrack.addEventListener('touchend', stopDragging);
+
+function stopDragging() {
+    isDragging = false;
+    carouselTrack.style.cursor = 'grab';
+    carouselTrack.style.userSelect = 'auto';
+}
+
+carouselTrack.addEventListener('mousemove', drag);
+carouselTrack.addEventListener('touchmove', drag);
+
+function drag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = (e.type === 'touchmove' ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
+    const walk = (x - startX) * 1.5; // sensibilité du drag
+    carouselTrack.scrollLeft = scrollLeft - walk;
+}
+
+// --- Flèches clavier (← →) ---
+document.addEventListener('keydown', (e) => {
+    if (document.activeElement.tagName === 'INPUT') return; // ignore si on est dans le champ password
+    if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex--;
+        scrollToIndex();
+    }
+    if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
+        currentIndex++;
+        scrollToIndex();
+    }
 });
 
-// Flèches
+function scrollToIndex() {
+    carouselTrack.scrollTo({
+        left: currentIndex * itemWidth,
+        behavior: 'smooth'
+    });
+}
+
+// --- Flèches visuelles (gauche / droite) ---
 document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     if (currentIndex > 0) {
         currentIndex--;
-        carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        scrollToIndex();
     }
 });
 
 document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
     if (currentIndex < memories.length - 1) {
         currentIndex++;
-        carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        scrollToIndex();
     }
-});
-
-// Drag / Swipe (PC + mobile)
-let isDragging = false;
-let startX = 0;
-let scrollLeft = 0;
-
-carouselTrack.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.pageX - carouselTrack.offsetLeft;
-    scrollLeft = carouselTrack.scrollLeft;
-    carouselTrack.style.cursor = 'grabbing';
-});
-
-carouselTrack.addEventListener('mouseleave', () => {
-    isDragging = false;
-    carouselTrack.style.cursor = 'grab';
-});
-
-carouselTrack.addEventListener('mouseup', () => {
-    isDragging = false;
-    carouselTrack.style.cursor = 'grab';
-});
-
-carouselTrack.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - carouselTrack.offsetLeft;
-    const walk = (x - startX) * 2; // vitesse du drag
-    carouselTrack.scrollLeft = scrollLeft - walk;
-});
-
-// Touch support (mobile swipe)
-carouselTrack.addEventListener('touchstart', (e) => {
-    isDragging = true;
-    startX = e.touches[0].pageX - carouselTrack.offsetLeft;
-    scrollLeft = carouselTrack.scrollLeft;
-});
-
-carouselTrack.addEventListener('touchend', () => {
-    isDragging = false;
-});
-
-carouselTrack.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    const x = e.touches[0].pageX - carouselTrack.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselTrack.scrollLeft = scrollLeft - walk;
 });
