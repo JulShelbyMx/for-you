@@ -450,7 +450,6 @@ html, body {
     width: max-content !important;         /* permet au track de dépasser */
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch !important;
-     padding: 0 20px;                      /* petit padding intérieur */
 }
 
 .carousel-track:active {
