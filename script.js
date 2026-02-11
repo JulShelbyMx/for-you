@@ -269,13 +269,88 @@ const memories = [
 ];
 
 // Carousel Memories corrigé
+// Carousel Memories corrigé - flèches fonctionnelles
 const carouselTrack = document.getElementById('carouselTrack');
+let currentIndex = 0;
+
 if (!carouselTrack) {
-    console.error("Element #carouselTrack non trouvé");
+    console.error("Carousel track not found");
 }
 
-// Populate carousel (images déjà affichées, on garde)
-memories.forEach(mem => {
+// Fonction pour scroller vers un index
+function scrollToIndex(index) {
+    const item = carouselTrack.children[index];
+    if (item) {
+        item.scrollIntoView({ 
+            behavior: 'smooth', 
+            inline: 'center' 
+        });
+        currentIndex = index;
+    }
+}
+
+// Flèches visuelles
+document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
+    if (currentIndex > 0) {
+        scrollToIndex(currentIndex - 1);
+    }
+});
+
+document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
+    if (currentIndex < memories.length - 1) {
+        scrollToIndex(currentIndex + 1);
+    }
+});
+
+// Flèches clavier ← →
+document.addEventListener('keydown', (e) => {
+    if (document.activeElement.tagName === 'INPUT') return;
+    if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        scrollToIndex(currentIndex - 1);
+    }
+    if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
+        scrollToIndex(currentIndex + 1);
+    }
+});
+
+// Drag / Swipe (PC souris + mobile doigt)
+let isDragging = false;
+let startPos = 0;
+let prevTranslate = 0;
+
+function startDrag(e) {
+    isDragging = true;
+    startPos = getPositionX(e);
+    carouselTrack.style.transition = 'none';
+}
+
+function endDrag() {
+    isDragging = false;
+    carouselTrack.style.transition = 'transform 0.5s ease';
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const currentPos = getPositionX(e);
+    const diff = currentPos - startPos;
+    carouselTrack.style.transform = `translateX(${diff}px)`;
+}
+
+function getPositionX(e) {
+    return e.type.includes('touch') ? e.touches[0].clientX : e.pageX;
+}
+
+carouselTrack.addEventListener('mousedown', startDrag);
+carouselTrack.addEventListener('touchstart', startDrag);
+carouselTrack.addEventListener('mouseup', endDrag);
+carouselTrack.addEventListener('mouseleave', endDrag);
+carouselTrack.addEventListener('touchend', endDrag);
+carouselTrack.addEventListener('mousemove', drag);
+carouselTrack.addEventListener('touchmove', drag);
+
+// Populate carousel (images)
+memories.forEach((mem, index) => {
     const item = document.createElement('div');
     item.className = 'carousel-item';
     
@@ -306,95 +381,3 @@ memories.forEach(mem => {
     
     carouselTrack.appendChild(item);
 });
-
-// Scroll smooth vers index
-function scrollToIndex(index) {
-    const itemWidth = carouselTrack.children[0]?.offsetWidth + 20 || 340; // largeur item + gap
-    const scrollPosition = index * itemWidth;
-    carouselTrack.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth'
-    });
-    currentIndex = index;
-}
-
-// Flèches visuelles
-document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
-    if (currentIndex > 0) {
-        scrollToIndex(currentIndex - 1);
-    }
-});
-
-document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
-    if (currentIndex < memories.length - 1) {
-        scrollToIndex(currentIndex + 1);
-    }
-});
-
-// Flèches clavier ← →
-document.addEventListener('keydown', (e) => {
-    if (document.activeElement.tagName === 'INPUT') return;
-    if (e.key === 'ArrowLeft' && currentIndex > 0) {
-        scrollToIndex(currentIndex - 1);
-    }
-    if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
-        scrollToIndex(currentIndex + 1);
-    }
-});
-
-// Drag / Swipe amélioré (PC + mobile)
-let isDragging = false;
-let startPos = 0;
-let currentTranslate = 0;
-let prevTranslate = 0;
-let animationID = null;
-
-function touchStart(e) {
-    isDragging = true;
-    startPos = getPositionX(e);
-    animationID = requestAnimationFrame(animation);
-    carouselTrack.style.transition = 'none';
-}
-
-function touchEnd() {
-    cancelAnimationFrame(animationID);
-    isDragging = false;
-    
-    // Snap to nearest item
-    const movedBy = currentTranslate - prevTranslate;
-    if (movedBy < -50 && currentIndex < memories.length - 1) currentIndex++;
-    if (movedBy > 50 && currentIndex > 0) currentIndex--;
-    
-    scrollToIndex(currentIndex);
-    
-    carouselTrack.style.transition = 'transform 0.5s ease';
-}
-
-function touchMove(e) {
-    if (isDragging) {
-        const currentPosition = getPositionX(e);
-        currentTranslate = prevTranslate + currentPosition - startPos;
-        setSliderPosition();
-    }
-}
-
-function getPositionX(e) {
-    return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-}
-
-function setSliderPosition() {
-    carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
-}
-
-function animation() {
-    setSliderPosition();
-    if (isDragging) requestAnimationFrame(animation);
-}
-
-carouselTrack.addEventListener('mousedown', touchStart);
-carouselTrack.addEventListener('touchstart', touchStart);
-carouselTrack.addEventListener('mouseup', touchEnd);
-carouselTrack.addEventListener('mouseleave', touchEnd);
-carouselTrack.addEventListener('touchend', touchEnd);
-carouselTrack.addEventListener('mousemove', touchMove);
-carouselTrack.addEventListener('touchmove', touchMove);
