@@ -349,6 +349,10 @@ carouselTrack.addEventListener('touchend', endDrag);
 carouselTrack.addEventListener('mousemove', drag);
 carouselTrack.addEventListener('touchmove', drag);
 
+// Retire tout espace inutile au début/fin après population
+carouselTrack.style.paddingLeft = '0px';
+carouselTrack.style.paddingRight = '0px';
+
 // Populate carousel (images)
 memories.forEach((mem, index) => {
     const item = document.createElement('div');

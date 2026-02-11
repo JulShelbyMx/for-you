@@ -429,12 +429,14 @@ html, body {
 }
 /* Force visibilité et non-superposition */
 .carousel-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow-x: scroll;
-    padding: 0 60px;                      /* espace pour que les flèches ne cachent pas le contenu */
     position: relative;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;  /* cache la scrollbar si tu veux */
+    padding: 0;             /* retire tout padding global */
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -442,14 +444,25 @@ html, body {
 }
 
 .carousel-track {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 20px;
-    transition: transform 0.5s ease !important;
-    width: max-content !important;         /* permet au track de dépasser */
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;              /* garde l'espace entre les images */
+    margin: 0;              /* pas de marge externe */
+    padding: 0 0 0 0 !important; /* retire tout padding gauche/droite */
+    width: max-content;
+    scroll-padding: 0 !important;
+}
+
+/* Supprime l'espace avant la première et après la dernière */
+.carousel-track > .carousel-item:first-child {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+.carousel-track > .carousel-item:last-child {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
 }
 
 .carousel-track:active {
