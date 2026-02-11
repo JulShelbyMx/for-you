@@ -263,108 +263,138 @@ const memories = [
     { src: "images/memories/test.jpg", date: "03/02/2026", time: "13:44", category: "Roblox" },
     { src: "images/memories/test.jpg", date: "01/02/2026", time: "19:15", category: "Our walk" },
     { src: "images/memories/test.jpg", date: "28/01/2026", time: "22:45", category: "Cute moment" },
+    { src: "images/memories/test.jpg", date: "28/02/2026", time: "22:45", category: "Cute moment" },
+    { src: "images/memories/test.jpg", date: "28/03/2026", time: "22:48", category: "Cute moment" },
     // Ajoute tes images ici
 ];
 
-// Carousel Memories amélioré
+// Carousel Memories corrigé
 const carouselTrack = document.getElementById('carouselTrack');
-let currentIndex = 0;
-let isDragging = false;
-let startX = 0;
-let scrollLeft = 0;
-
-// Drag/Swipe (PC + mobile)
-function startDragging(e) {
-    isDragging = true;
-    startX = (e.type.includes('touch') ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
-    scrollLeft = carouselTrack.scrollLeft;
-    carouselTrack.style.cursor = 'grabbing';
-    carouselTrack.style.userSelect = 'none';
+if (!carouselTrack) {
+    console.error("Element #carouselTrack non trouvé");
 }
 
-function stopDragging() {
-    isDragging = false;
-    carouselTrack.style.cursor = 'grab';
-    carouselTrack.style.userSelect = 'auto';
-}
+// Populate carousel (images déjà affichées, on garde)
+memories.forEach(mem => {
+    const item = document.createElement('div');
+    item.className = 'carousel-item';
+    
+    const img = document.createElement('img');
+    img.src = mem.src;
+    img.alt = `Memory ${mem.date} ${mem.category}`;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    img.style.objectPosition = 'center';
+    
+    item.appendChild(img);
 
-function drag(e) {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = (e.type.includes('touch') ? e.touches[0].pageX : e.pageX) - carouselTrack.offsetLeft;
-    const walk = (x - startX) * 1.8; // sensibilité
-    carouselTrack.scrollLeft = scrollLeft - walk;
-}
-
-carouselTrack.addEventListener('mousedown', startDragging);
-carouselTrack.addEventListener('touchstart', startDragging);
-carouselTrack.addEventListener('mouseleave', stopDragging);
-carouselTrack.addEventListener('mouseup', stopDragging);
-carouselTrack.addEventListener('touchend', stopDragging);
-carouselTrack.addEventListener('mousemove', drag);
-carouselTrack.addEventListener('touchmove', drag);
-
-// Flèches clavier ← →
-document.addEventListener('keydown', (e) => {
-    if (document.activeElement.tagName === 'INPUT') return;
-    if (e.key === 'ArrowLeft' && currentIndex > 0) {
-        currentIndex--;
-        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
-    }
-    if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
-        currentIndex++;
-        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
-    }
+    const info = document.createElement('div');
+    info.className = 'carousel-item-info';
+    
+    const dateTime = document.createElement('div');
+    dateTime.className = 'date-time';
+    dateTime.textContent = `${mem.date}, ${mem.time}`;
+    
+    const category = document.createElement('div');
+    category.className = 'category';
+    category.textContent = `(${mem.category})`;
+    
+    info.appendChild(dateTime);
+    info.appendChild(category);
+    item.appendChild(info);
+    
+    carouselTrack.appendChild(item);
 });
+
+// Scroll smooth vers index
+function scrollToIndex(index) {
+    const itemWidth = carouselTrack.children[0]?.offsetWidth + 20 || 340; // largeur item + gap
+    const scrollPosition = index * itemWidth;
+    carouselTrack.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+    });
+    currentIndex = index;
+}
 
 // Flèches visuelles
 document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     if (currentIndex > 0) {
-        currentIndex--;
-        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
+        scrollToIndex(currentIndex - 1);
     }
 });
 
 document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
     if (currentIndex < memories.length - 1) {
-        currentIndex++;
-        carouselTrack.scrollTo({ left: currentIndex * 340, behavior: 'smooth' });
+        scrollToIndex(currentIndex + 1);
     }
 });
 
-// Populate carousel
-if (carouselTrack && memories.length > 0) {
-    memories.forEach(mem => {
-        const item = document.createElement('div');
-        item.className = 'carousel-item';
-        
-        // Image comme <img> au lieu de background (beaucoup plus fiable pour proportions)
-        const img = document.createElement('img');
-        img.src = mem.src;
-        img.alt = `Memory ${mem.date} ${mem.category}`;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'contain'; // garde proportions sans crop
-        img.style.objectPosition = 'center';
-        item.appendChild(img);
+// Flèches clavier ← →
+document.addEventListener('keydown', (e) => {
+    if (document.activeElement.tagName === 'INPUT') return;
+    if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        scrollToIndex(currentIndex - 1);
+    }
+    if (e.key === 'ArrowRight' && currentIndex < memories.length - 1) {
+        scrollToIndex(currentIndex + 1);
+    }
+});
 
-        const info = document.createElement('div');
-        info.className = 'carousel-item-info';
-        
-        const dateTime = document.createElement('div');
-        dateTime.className = 'date-time';
-        dateTime.textContent = `${mem.date}, ${mem.time}`;
-        
-        const category = document.createElement('div');
-        category.className = 'category';
-        category.textContent = `(${mem.category})`;
-        
-        info.appendChild(dateTime);
-        info.appendChild(category);
-        item.appendChild(info);
-        
-        carouselTrack.appendChild(item);
-    });
-} else {
-    console.error("Carousel track not found or no memories data");
+// Drag / Swipe amélioré (PC + mobile)
+let isDragging = false;
+let startPos = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+let animationID = null;
+
+function touchStart(e) {
+    isDragging = true;
+    startPos = getPositionX(e);
+    animationID = requestAnimationFrame(animation);
+    carouselTrack.style.transition = 'none';
 }
+
+function touchEnd() {
+    cancelAnimationFrame(animationID);
+    isDragging = false;
+    
+    // Snap to nearest item
+    const movedBy = currentTranslate - prevTranslate;
+    if (movedBy < -50 && currentIndex < memories.length - 1) currentIndex++;
+    if (movedBy > 50 && currentIndex > 0) currentIndex--;
+    
+    scrollToIndex(currentIndex);
+    
+    carouselTrack.style.transition = 'transform 0.5s ease';
+}
+
+function touchMove(e) {
+    if (isDragging) {
+        const currentPosition = getPositionX(e);
+        currentTranslate = prevTranslate + currentPosition - startPos;
+        setSliderPosition();
+    }
+}
+
+function getPositionX(e) {
+    return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+}
+
+function setSliderPosition() {
+    carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+}
+
+function animation() {
+    setSliderPosition();
+    if (isDragging) requestAnimationFrame(animation);
+}
+
+carouselTrack.addEventListener('mousedown', touchStart);
+carouselTrack.addEventListener('touchstart', touchStart);
+carouselTrack.addEventListener('mouseup', touchEnd);
+carouselTrack.addEventListener('mouseleave', touchEnd);
+carouselTrack.addEventListener('touchend', touchEnd);
+carouselTrack.addEventListener('mousemove', touchMove);
+carouselTrack.addEventListener('touchmove', touchMove);

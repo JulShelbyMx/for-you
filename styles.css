@@ -430,17 +430,27 @@ html, body {
 
 .carousel-container {
     position: relative;
-    overflow: hidden;
     width: 100%;
-    user-select: none; /* évite la sélection texte pendant drag */
-    -webkit-user-select: none;
+    overflow-x: scroll !important;         /* force le scroll horizontal */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch !important; /* scroll fluide sur iOS */
+    scroll-behavior: smooth;
+    scrollbar-width: none;                 /* cache la scrollbar par défaut (optionnel) */
+}
+
+.carousel-container::-webkit-scrollbar {
+    display: none;                         /* cache scrollbar sur WebKit (Chrome/Safari) */
 }
 
 .carousel-track {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     gap: 20px;
-    transition: transform 0.5s ease;
-    cursor: grab;
+    transition: transform 0.5s ease !important;
+    width: max-content !important;         /* permet au track de dépasser */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 .carousel-track:active {
